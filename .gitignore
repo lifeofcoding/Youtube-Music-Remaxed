@@ -1,0 +1,12 @@
+#directories
+bower_components
+node_modules
+dist
+Package-lock.json
+
+#files
+*.tgz
+*.log
+
+#system generated
+.DS_Store

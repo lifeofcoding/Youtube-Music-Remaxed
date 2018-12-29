@@ -1,0 +1,57 @@
+{
+  "name": "Youtube-Music-Remaxed",
+  "version": "1.0.3",
+  "description": "Youtube Music with adblocking, and downloading.",
+  "main": "src/index.js",
+  "repository": "https://github.com/lifeofcoding/Youtube-Music-Remaxed.git",
+  "scripts": {
+    "start": "electron src/index.js",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder -mwl"
+  },
+  "build": {
+    "appId": "engineer.hxc.music",
+    "productName": "HXCMusic Streaming",
+    "copyright": "Copyright © 2018 Luchianenco Filip",
+    "mac": {
+      "target": [
+        "dmg",
+        "zip"
+      ],
+      "category": "music"
+    },
+    "linux": {
+      "category": "AudioVideo",
+      "target": [
+        "AppImage"
+      ]
+    },
+    "win": {
+      "target": "NSIS"
+    }
+  },
+  "postinstall": "electron-builder install-app-deps",
+  "author": "Jimmy Rousseau",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^4.0.0",
+    "electron-builder": "^20.19.2",
+    "electron-is-dev": "^0.3.0"
+  },
+  "dependencies": {
+    "electron-dl": "^1.12.0",
+    "electron-download-manager": "^2.2.0",
+    "electron-notifications": "^1.0.0",
+    "electron-window-state": "^4.1.1",
+    "hashset-cpp": "^2.1.0",
+    "jquery": "^3.3.1",
+    "youtube-audio-server": "^2.1.4"
+  },
+  "keywords": [
+    "music",
+    "player",
+    "electron",
+    "desktop",
+    "youtube"
+  ]
+}
