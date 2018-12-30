@@ -8,19 +8,9 @@ const shortcuts = require('./main/Shortcuts')
 const TrayMenu = require('./main/TrayMenu')
 const PlaybackActions = require('./main/PlaybackActions')
 const AppActions = require('./main/AppActions')
-const MainWindow = require('./main/MainWindow')
-const adBlock = require('electron-ad-block');
-//const yas = require('youtube-audio-server')
-//const { blockWindowAds, adBlocker } = require('electron-ad-blocker');
-
-const options = {
-  verbose: true,
-  logger: console,
-}
+const MainWindow = require('./main/MainWindow');
 
 let mainWindow, playbackActions, appActions, trayMenu;
-
-global.viewport = '';
 
 app.on('ready', init)
 
@@ -34,10 +24,11 @@ function init() {
 
 function createWindow () {
   mainWindow = new MainWindow();
+//  mainWindow.loadURL('file://index.html');
   
-  adBlock(mainWindow.webContents.session, {
-    filterTypes: ['ads', 'privacy', 'annoyance', 'social'],
-  });
+//  adBlock(mainWindow.webContents.session, {
+//    filterTypes: ['ads', 'privacy', 'annoyance', 'social'],
+//  });
 
   //blockWindowAds(mainWindow, options)
 }
