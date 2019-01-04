@@ -14,7 +14,7 @@ class TrayMenu extends Tray {
     if (platform == 'darwin') {
       this.setPressedImage(imageFolder + '/osx/trayHighlight.png');
     }
-    this.setToolTip('PlayMe');
+    this.setToolTip('Remaxed');
     this.setContextMenu(getTrayMenu(this.playbackActions, this.appActions));
   }
 }
@@ -53,7 +53,7 @@ function getTrayMenu(playbackActions, appActions) {
 
     {type: 'separator'},
 
-    {label: 'Quit PlayMe', role: 'quit'}
+    {label: 'Quit Remaxed', role: 'quit'}
   ])
 }
 

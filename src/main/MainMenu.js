@@ -6,7 +6,7 @@ function createMenu(playbackActions) {
       label: 'Application',
       submenu: [
         {
-          label: 'Quit PlayMe',
+          label: 'Quit Remaxed',
           accelerator: 'CmdOrCtrl+Q',
           role: 'quit'
         }
@@ -16,7 +16,7 @@ function createMenu(playbackActions) {
       label: 'Actions',
       submenu: [
         {
-          label: 'play/Pause',
+          label: 'Toggle Play (Pause)',
           click() {
           	 playbackActions.playPause();
           }

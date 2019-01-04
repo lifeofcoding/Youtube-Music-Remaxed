@@ -23,12 +23,9 @@ function init() {
 }
 
 function createWindow () {
-  mainWindow = new MainWindow();
-//  mainWindow.loadURL('file://index.html');
+//  require('electron-debug')();
   
-//  adBlock(mainWindow.webContents.session, {
-//    filterTypes: ['ads', 'privacy', 'annoyance', 'social'],
-//  });
+  mainWindow = new MainWindow();
 
   //blockWindowAds(mainWindow, options)
 }
@@ -91,4 +88,13 @@ app.on('activate', () => {
   if (mainWindow == null) {
     init()
   }
+})
+
+app.on('before-quit', () => {
+  // On OS X it's common to re-create a window in the app when the
+  // dock icon is clicked and there are no other windows open.
+  debugger;
+  console.log('global.engine', global.engine.pid);
+  global.engine.kill();
+  spawn('kill', ['-QUIT', '-$(ps opgid= '+global.engine.pid+')']);
 })

@@ -82,6 +82,7 @@ $webview.addEventListener('did-stop-loading', () => {
   }
 });
 
+
 $webview.addEventListener('did-start-loading', () => {
   // we use client side rendering so the loader is only needed on the first page load
   if(isInitialLoad) {
@@ -102,39 +103,24 @@ $webview.addEventListener('dom-ready', () => {
     ipcRenderer.send('download', {url: 'http://127.0.0.1:7331/' + video_id});
   });
   
-  $webview.classList.remove('hide');
+  let w = window.innerWidth;
+  let h = window.innerHeight;
+  
+  $webview.style.width = w;
+  $webview.style.height = h;
   // have to delay in order for the webview show/resize to settle
   setTimeout(() => {
     $loader.classList.add('loader-hide');
-  }, 100);
+    
+    setTimeout(() => {
+      $webview.classList.remove('hide');
+      $webview.classList.add('vanishIn');
+    }, 2000);
+  }, 1000);
 });
 
 let firstShotReloaded = false
 
-const attachDebugger = () => {
-  const debug = $webview.getWebContents().debugger
-  debug.attach('1.1')
-  debug.on('message', (event, method, params) => {
-    if (!firstShotReloaded && method === 'Network.responseReceived') {
-      // XXX did not find any other way for first page load
-      firstShotReloaded = true
-      $webview.reload()
-    }
-    if (method === 'Network.requestWillBeSent') {
-      if (params.request.url === $webview.getURL()) {
-        debug.sendCommand('Network.getResponseBody', { requestId: params.requestId }, (err, data) => {
-          if (err.code === undefined) {
-            // XXX may check data.base64encoded boolean and decode ? Maybe not here...
-            // if (data.base64encoded) ... Buffer.from(data.body, 'base64');
-            this.$store.dispatch('updateStaticSource', data.body)
-          }
-        })
-      }
-    }
-  })
-  debug.sendCommand('Network.enable')
-  webview.removeEventListener('did-start-loading', attachDebugger)
-}
 $webview.addEventListener('did-start-loading', attachDebugger)
 
 // this is just for development convenience

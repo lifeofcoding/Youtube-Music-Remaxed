@@ -5,8 +5,6 @@ const path = require('path');
 
 let mainWindowState;
 
-const loadFile = filePath => win.loadURL(`file://${path.resolve(electron.app.getAppPath(), filePath)}`);
-
 class MainWindow extends BrowserWindow {
 
   constructor() {
@@ -30,8 +28,8 @@ class MainWindow extends BrowserWindow {
     mainWindowState.manage(this)
     
     this.loadURL(`file://${path.resolve(app.getAppPath(), '../../../../../index.html')}`);
-    this.openDevTools({ mode: 'bottom' });
-//    this.loadFile('../../../../../index.html');
+    //this.openDevTools({ mode: 'bottom' });
+
   }
 }
 
