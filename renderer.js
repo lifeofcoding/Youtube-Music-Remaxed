@@ -119,9 +119,9 @@ $webview.addEventListener('dom-ready', () => {
   }, 1000);
 });
 
-let firstShotReloaded = false
+// let firstShotReloaded = false
 
-$webview.addEventListener('did-start-loading', attachDebugger)
+// $webview.addEventListener('did-start-loading', attachDebugger)
 
 // this is just for development convenience
 window.openWebviewDevTools = () => {

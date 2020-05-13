@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="BranchesTreeState">
+    <expand>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+    </expand>
+    <select>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="BRANCH:master" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+    </select>
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="4dab8223-b85e-489d-a6e4-987a0207dc87" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/renderer.js" beforeDir="false" afterPath="$PROJECT_DIR$/renderer.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/MainWindow.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/MainWindow.js" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="JsBowerSettings">
+    <node-interpreter value="project" />
+    <bower-package value="" />
+    <bower.json value="" />
+  </component>
+  <component name="ProjectId" id="1bqxLVjSahVZW1WXAsPiVWJSPJ8" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/main/assets/icons/png" />
+    <property name="node.js.detected.package.eslint" value="true" />
+    <property name="node.js.detected.package.standard" value="true" />
+    <property name="node.js.path.for.package.eslint" value="project" />
+    <property name="node.js.path.for.package.standard" value="project" />
+    <property name="node.js.selected.package.eslint" value="(autodetect)" />
+    <property name="node.js.selected.package.standard" value="" />
+    <property name="nodejs_package_manager_path" value="npm" />
+    <property name="prettierjs.PrettierConfiguration.NodeInterpreter" value="$USER_HOME$/.nvm/versions/node/v12.16.2/bin/node" />
+    <property name="prettierjs.PrettierConfiguration.Package" value="$USER_HOME$/.nvm/versions/node/v12.16.2/lib/node_modules/prettier" />
+    <property name="run.prettier.on.save" value="true" />
+    <property name="settings.editor.selected.configurable" value="reference.settingsdialog.IDE.editor.colors" />
+    <property name="ts.external.directory.path" value="$APPLICATION_HOME_DIR$/plugins/JavaScriptLanguage/jsLanguageServicesImpl/external" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/extraResources" />
+      <recent name="$PROJECT_DIR$/src/main" />
+      <recent name="$PROJECT_DIR$" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/main/assets/icons/png" />
+    </key>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="4dab8223-b85e-489d-a6e4-987a0207dc87" name="Default Changelist" comment="" />
+      <created>1589373368915</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1589373368915</updated>
+      <workItem from="1589373374470" duration="1364000" />
+      <workItem from="1589374752860" duration="15161000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="2" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="master" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="1458" y="180" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1589373840416">
+      <screen x="1280" y="62" width="1440" height="900" />
+    </state>
+    <state x="1458" y="180" key="#com.intellij.execution.impl.EditConfigurationsDialog/1280.62.1440.900/0.92.1280.932@1280.62.1440.900" timestamp="1589373840416" />
+    <state x="1783" y="281" width="424" height="486" key="FileChooserDialogImpl" timestamp="1589375620989">
+      <screen x="1280" y="62" width="1440" height="900" />
+    </state>
+    <state x="1783" y="281" width="424" height="486" key="FileChooserDialogImpl/1280.62.1440.900/0.92.1280.932@1280.62.1440.900" timestamp="1589375620989" />
+    <state x="1583" y="265" width="824" height="525" key="IDE.errors.dialog" timestamp="1589375638066">
+      <screen x="1280" y="62" width="1440" height="900" />
+    </state>
+    <state x="1583" y="265" width="824" height="525" key="IDE.errors.dialog/1280.62.1440.900/0.92.1280.932@1280.62.1440.900" timestamp="1589375638066" />
+    <state x="1504" y="157" width="992" height="732" key="SettingsEditor" timestamp="1589376138077">
+      <screen x="1280" y="62" width="1440" height="900" />
+    </state>
+    <state x="1504" y="157" width="992" height="732" key="SettingsEditor/1280.62.1440.900/0.92.1280.932@1280.62.1440.900" timestamp="1589376138077" />
+    <state x="1762" y="417" width="465" height="222" key="git4idea.ui.GitResetDialog" timestamp="1589393481263">
+      <screen x="1280" y="62" width="1440" height="900" />
+    </state>
+    <state x="1762" y="417" width="465" height="222" key="git4idea.ui.GitResetDialog/1280.62.1440.900/0.92.1280.932@1280.62.1440.900" timestamp="1589393481263" />
+  </component>
+</project>

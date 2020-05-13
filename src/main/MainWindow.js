@@ -18,7 +18,7 @@ class MainWindow extends BrowserWindow {
       minWidth: 800,
       minHeight: 600,
       backgroundColor: '#181818',
-      icon: path.join(__dirname, 'assets/icons/png/64x64.png'),
+      icon: path.join(__dirname, 'assets/icons/osx/trayHighlight.png'),
       webPreferences: {
         nodeIntegration: true,
         preload: "preload.js"
@@ -26,9 +26,8 @@ class MainWindow extends BrowserWindow {
     });
 
     mainWindowState.manage(this)
-    
-    this.loadURL(`file://${path.resolve(app.getAppPath(), '../../../../../index.html')}`);
-    //this.openDevTools({ mode: 'bottom' });
+
+    this.loadURL(`file://${path.resolve(__dirname, '../../index.html')}`);
 
   }
 }

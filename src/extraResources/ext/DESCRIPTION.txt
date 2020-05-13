@@ -1,0 +1,33 @@
+A plugin for automatically pressing Skip Ad button on youtube videos.
+This extension simply helps you automatically CLICK the "Skip Ad" button once it's visible. This way even the content creator gets paid and you don't need to manually click the "Skip Ad" button. Everyone Happy!!!
+
+Support this extension: https://donorbox.org/to-sustain-building-google-chrome-extensions
+
+v.1.0.0:
+Initial upload
+
+v1.1.0:
+optimize code
+
+v1.1.1:
+removed bug of script crashing when installing the extension
+
+v1.1.2: (2018/06/17)
+updated code to improve performance
+
+v1.2.0: (2018/08/13)
+initiate extension functionality without refreshing youtube page after installing extension
+
+v1.3.0: (2018/12/15)
+updated extension to support latest youtube layout
+
+v1.4.0: (2019/01/11)
+Further stability tweaks to skip ads
+
+v2.0.0: (2019/05/17)
+Added:
+Close Ad-Banner automatically
+Option to turn On/Off automatic closing of Ad-Banner
+Options for Skip ad e.g. Immediately, After countdown, After 30 seconds, Never
+Screenshot for Options page
+Option to Reset Config to Defaults

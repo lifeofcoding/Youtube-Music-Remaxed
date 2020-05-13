@@ -10,6 +10,8 @@ const PlaybackActions = require('./main/PlaybackActions')
 const AppActions = require('./main/AppActions')
 const MainWindow = require('./main/MainWindow');
 
+const YOUTUBE_AD_REGEX = /(doubleclick\.net)|(adservice\.google\.)|(youtube\.com\/api\/stats\/ads)|(&ad_type=)|(&adurl=)|(-pagead-id.)|(doubleclick\.com)|(\/ad_status.)|(\/api\/ads\/)|(\/googleads)|(\/pagead\/gen_)|(\/pagead\/lvz?)|(\/pubads.)|(\/pubads_)|(\/securepubads)|(=adunit&)|(googlesyndication\.com)|(innovid\.com)|(tubemogul\.com)|(youtube\.com\/pagead\/)|(google\.com\/pagead\/)|(flashtalking\.com)|(googleadservices\.com)|(s0\.2mdn\.net\/ads)|(www\.youtube\.com\/ptracking)|(www\.youtube\.com\/pagead)|(www\.youtube\.com\/get_midroll_)|(www\.youtube\.com\/api\/stats)/
+
 let mainWindow, playbackActions, appActions, trayMenu;
 
 app.on('ready', init)
@@ -19,13 +21,22 @@ function init() {
   createMenu()
   createTrayMenu()
   registerGlobalShortcuts()
-  launchEngine();
+  // launchEngine();
 }
 
 function createWindow () {
 //  require('electron-debug')();
   
   mainWindow = new MainWindow();
+
+    session.defaultSession.webRequest.onBeforeRequest(['*://*./*'], function(details, callback) {
+        if(YOUTUBE_AD_REGEX.test(details.url)){
+            console.log('blocked', details.url)
+            callback({cancel: true});
+        }else{
+            callback({cancel: false})
+        }
+    });
 
   //blockWindowAds(mainWindow, options)
 }
@@ -93,8 +104,8 @@ app.on('activate', () => {
 app.on('before-quit', () => {
   // On OS X it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
-  debugger;
-  console.log('global.engine', global.engine.pid);
-  global.engine.kill();
-  spawn('kill', ['-QUIT', '-$(ps opgid= '+global.engine.pid+')']);
+  // debugger;
+  // console.log('global.engine', global.engine.pid);
+  // global.engine.kill();
+  // spawn('kill', ['-QUIT', '-$(ps opgid= '+global.engine.pid+')']);
 })

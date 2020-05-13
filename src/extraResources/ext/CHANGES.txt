@@ -1,0 +1,30 @@
+v.1.0.0:
+- Initial upload
+
+v1.1.0:
+- optimize code
+
+v1.1.1:
+- removed bug of script crashing when installing the extension
+
+v1.1.2: (2018/06/17)
+- updated code to improve performance
+
+v1.2.0: (2018/08/13)
+- added script to run code without refreshing youtube page after installing extension
+- reorganized file structure
+
+v1.3.0: (2018/12/15)
+- Added Google Analytics code
+- Updated extension to support latest youtube layout
+
+v1.4.0: (2019/01/11)
+- Further stability tweaks to skip ads
+
+v2.0.0: (2019/05/17)
+Added:
+- Close Ad-Banner automatically
+- Option to turn On/Off automatic closing of Ad-Banner
+- Options for Skip ad e.g. Immediately, After countdown, After 30 seconds, Never
+- Screenshot for Options page
+- Option to Reset Config to Defaults
