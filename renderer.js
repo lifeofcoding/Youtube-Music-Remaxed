@@ -95,6 +95,24 @@ $webview.addEventListener("did-start-loading", () => {
   //$webview.getWebContents().openDevTools();
   const ses = remote.session.fromPartition("persist:webview");
 
+  $webview.getWebContents().on("will-navigate", function (event, url) {
+    let video_id = YouTubeGetID(url);
+
+    if (video_id) {
+      console.log("is video url");
+      console.log("trying ad removal method 1");
+      $webview.getWebContents().executeJavaScript(`
+          console.log("trying ad removal method 1");
+          var player = document.getElementById("movie_player");
+          var clean_player = player.cloneNode(true);
+          var flash_vars = player.getAttribute("flashvars");
+          flash_vars = flash_vars.replace(/&ad[^&]+/g, "");
+          clean_player.setAttribute("flashvars", flash_vars);
+          player.parentNode.replaceChild(clean_player, player);
+      `);
+    }
+  });
+
   let session = $webview.getWebContents().session;
 
   //VISITOR_INFO1_LIVE=oKckVSqvaGw; path=/; domain=.youtube.com
@@ -146,8 +164,7 @@ $webview.addEventListener("dom-ready", () => {
 
     const ipcRenderer = require("electron").ipcRenderer;
     let video_id = YouTubeGetID(document.querySelector("webview").src);
-    //    let title = webContents.executeJavaScript(`document.getElementById("movie_player").src = "http://127.0.0.1:7331/${video_id}"`);
-    ipcRenderer.send("download", { url: "http://127.0.0.1:7331/" + video_id });
+    ipcRenderer.send("download", { id: video_id });
   });
 
   let w = window.innerWidth;
