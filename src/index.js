@@ -29,7 +29,6 @@ function init() {
   createMenu();
   createTrayMenu();
   registerGlobalShortcuts();
-  // launchEngine();
 }
 
 function createWindow() {
@@ -75,26 +74,6 @@ function getAppActions() {
     appActions = new AppActions(mainWindow);
   }
   return appActions;
-}
-
-function launchEngine() {
-  var script = spawn("node", [path.join(__dirname, "main", "api/engine.js")], {
-    env: process.env,
-  });
-
-  script.stdout.on("data", (data) => {
-    console.log(`stdout: ${data}`);
-  });
-
-  script.stderr.on("data", (data) => {
-    console.log(`stderr: ${data}`);
-  });
-
-  script.on("close", (code) => {
-    console.log(`child process exited with code ${code}`);
-  });
-
-  global.engine = script;
 }
 
 app.on("window-all-closed", () => {

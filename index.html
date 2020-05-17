@@ -39,6 +39,8 @@
         background: #000;
         padding: 0;
         margin: 0;
+        width: 100vw;
+        height: 100vh;
       }
 
       .openNav {
@@ -153,6 +155,8 @@
       }
 
       webview {
+        width: 100vw;
+        height: 100vh;
         opacity: 1;
         animation-duration: 500ms;
       }
@@ -289,6 +293,8 @@
       </div>
 
       <webview
+        width="100%"
+        height="100%"
         class="hide magictime"
         src="https://music.youtube.com/"
         preload="./preload.js"
@@ -313,6 +319,7 @@
     <script>
       require("./renderer.js");
 
+      var webview = document.querySelector("webview");
       document.querySelector(".openNav").onclick = function toggleNav() {
         document.querySelector(".sideBar").classList.toggle("navToggle");
         document.querySelector("#main").classList.toggle("navToggle");
@@ -335,6 +342,11 @@
 
       closeButton.addEventListener("click", toggleModal);
       window.addEventListener("click", windowOnClick);
+
+      window.addEventListener("resize", function () {
+        webview.style.width = window.innerWidth;
+        webview.style.height = window.innerHeight;
+      });
 
       // progressbar.js@1.0.0 version is used
       // Docs: http://progressbarjs.readthedocs.org/en/1.0.0/
@@ -370,7 +382,11 @@
 
         if (percentage === 1.0) {
           downloading = false;
-          document.querySelector(".openNav").classList.toggle("downloading");
+
+          setTimeout(function () {
+            document.querySelector(".openNav").classList.toggle("downloading");
+            bar.animate(0);
+          }, 2000);
         }
       };
     </script>

@@ -19,9 +19,9 @@ class AppActions {
       ["ffmpeg"],
       { platform: os.platform(), quiet: true, destination: dest },
       function (error, results) {
-        console.log(
-          "Downloaded ffplay and ffprobe binaries for linux-64 to " + dest + "."
-        );
+        if (error || !results.length) {
+          return console.warn("Connection Error");
+        }
 
         ffmpegPath = results[0].path;
         ffmpegFilename = results[0].filename;

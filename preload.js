@@ -24,7 +24,7 @@ function init() {
       if (defined(ad)) {
         console.log("method2: found ad");
         const video = document.querySelector("video");
-        if (defined(video)) {
+        if (defined(video) && video.duration) {
           video.currentTime = video.duration;
         }
       }

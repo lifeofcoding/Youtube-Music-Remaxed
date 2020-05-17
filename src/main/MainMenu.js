@@ -1,40 +1,40 @@
-const { Menu } = require('electron');
+const { Menu } = require("electron");
 
 function createMenu(playbackActions) {
   const topLevelItems = [
     {
-      label: 'Application',
+      label: "Application",
       submenu: [
         {
-          label: 'Quit Remaxed',
-          accelerator: 'CmdOrCtrl+Q',
-          role: 'quit'
-        }
-      ]
+          label: "Quit Youtube Music",
+          accelerator: "CmdOrCtrl+Q",
+          role: "quit",
+        },
+      ],
     },
     {
-      label: 'Actions',
+      label: "Actions",
       submenu: [
         {
-          label: 'Toggle Play (Pause)',
+          label: "Toggle Play (Pause)",
           click() {
-          	 playbackActions.playPause();
-          }
+            playbackActions.playPause();
+          },
         },
         {
-          label: 'Next',
+          label: "Next",
           click() {
-          	 playbackActions.next();
-          }
+            playbackActions.next();
+          },
         },
         {
-          label: 'Previous',
+          label: "Previous",
           click() {
-          	 playbackActions.previous();
-          }
-        }
-      ]
-    }
+            playbackActions.previous();
+          },
+        },
+      ],
+    },
   ];
   Menu.setApplicationMenu(Menu.buildFromTemplate(topLevelItems));
 }
