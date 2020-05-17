@@ -58,6 +58,10 @@ ipcRenderer.on("action", function (event, data) {
   }
 });
 
+ipcRenderer.on("downloadProgress", function (event, data) {
+  window.setDownloadProgress(data / 100);
+});
+
 function createFragment(htmlStr) {
   var frag = document.createDocumentFragment(),
     temp = document.createElement("div");

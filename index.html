@@ -16,6 +16,17 @@
     />
     <link rel="stylesheet" href="node_modules/magic.css/magic.css" />
 
+    <link
+      href="https://fonts.googleapis.com/css?family=Raleway:400,300,600,800,900"
+      rel="stylesheet"
+      type="text/css"
+    />
+
+    <script
+      type="text/javascript"
+      src="https://rawgit.com/kimmobrunfeldt/progressbar.js/1.0.0/dist/progressbar.js"
+    ></script>
+
     <style>
       @import url("https://fonts.googleapis.com/css?family=Roboto:300,400,500,700");
       * {
@@ -32,7 +43,7 @@
 
       .openNav {
         display: none;
-        transition: transform 1s;
+        transition: all 1s;
         position: fixed;
         z-index: 10;
         right: 24vw;
@@ -50,7 +61,17 @@
         margin: 10px;
       }
       .openNav:hover {
-        background: #0c7cd5;
+        background: #1c5380;
+      }
+
+      .openNav.downloading {
+        background: #1c5380;
+      }
+
+      .openNav img {
+        position: absolute;
+        top: 8px;
+        right: 8px;
       }
 
       nav {
@@ -314,6 +335,44 @@
 
       closeButton.addEventListener("click", toggleModal);
       window.addEventListener("click", windowOnClick);
+
+      // progressbar.js@1.0.0 version is used
+      // Docs: http://progressbarjs.readthedocs.org/en/1.0.0/
+
+      const bar = new ProgressBar.Circle(document.querySelector(".openNav"), {
+        color: "#0ac6c9",
+        // This has to be the same size as the maximum width to
+        // prevent clipping
+        strokeWidth: 8,
+        trailWidth: 1,
+        easing: "easeInOut",
+        duration: 1400,
+        text: {
+          autoStyleContainer: false,
+        },
+        from: { color: "#0ac6c9", width: 8 },
+        to: { color: "#0ac6c9", width: 8 },
+        // Set default step function for all animate calls
+        step: function (state, circle) {
+          circle.path.setAttribute("stroke", state.color);
+          circle.path.setAttribute("stroke-width", state.width);
+        },
+      });
+
+      var downloading = false;
+      window.setDownloadProgress = function (percentage) {
+        if (!downloading) {
+          downloading = true;
+          document.querySelector(".openNav").classList.toggle("downloading");
+        }
+        console.log("progress:", percentage);
+        bar.animate(percentage); // Number from 0.0 to 1.0
+
+        if (percentage === 1.0) {
+          downloading = false;
+          document.querySelector(".openNav").classList.toggle("downloading");
+        }
+      };
     </script>
     <script>
       window.$ = window.jQuery = require("jquery");
