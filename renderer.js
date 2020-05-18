@@ -2,6 +2,9 @@ const $webview = (webview = document.querySelector("webview"));
 const $loader = document.querySelector(".loader");
 const { ipcMain, ipcRenderer, remote } = require("electron");
 
+const pippyJS =
+  "\n(async () => {\n  const sourcesArray = Array.from(document.querySelectorAll('video')).filter(video => video.readyState != 0).filter(video => video.disablePictureInPicture == false).sort((v1, v2) => {\n    const v1Rect = v1.getClientRects()[0];\n    const v2Rect = v1.getClientRects()[0];\n    return ((v2Rect.width * v2Rect.height) - (v1Rect.width * v1Rect.height));\n  });\n  if (sourcesArray.length === 0)\n    return;\n  const video = sourcesArray[0];\n  if (video.hasAttribute('pippystatus')) {\n    await document.exitPictureInPicture();\n  } else {\n    await video.requestPictureInPicture();\n    video.setAttribute('pippystatus', true);\n    video.addEventListener('leavepictureinpicture', event => {\n      video.removeAttribute('pippystatus');\n    }, { once: true });\n  }\n})();\n    ";
+
 let isInitialLoad = true;
 
 var player, currentlyPlaying;
@@ -97,7 +100,6 @@ $webview.addEventListener("did-stop-loading", () => {
 
 $webview.addEventListener("did-start-loading", () => {
   //$webview.getWebContents().openDevTools();
-  const ses = remote.session.fromPartition("persist:webview");
 
   $webview.getWebContents().on("will-navigate", function (event, url) {
     let video_id = YouTubeGetID(url);
@@ -185,6 +187,8 @@ $webview.addEventListener("dom-ready", () => {
       $webview.classList.add("vanishIn");
     }, 2000);
   }, 1000);
+
+  $webview.getWebContents().executeJavaScript(pippyJS);
 });
 
 $webview.addEventListener("contextmenu", (event) => {

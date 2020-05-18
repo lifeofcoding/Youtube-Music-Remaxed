@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Popout for YouTube&trade;</title>
+    <meta charset="utf-8" />
+    <style>
+        html,
+        body,
+        iframe {
+            height: 100%;
+            width: 100%;
+        }
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: black;
+        }
+        iframe {
+            border: none !important;
+        }
+
+        #title-bar-btns {
+            -webkit-app-region: no-drag;
+            position: fixed;
+            top: 0px;
+            right: 6px;
+        }
+        nav {
+            display: block;
+            width: 100%;
+            height: 30px;
+            background-color: rgba(0, 0, 0, 0.5);
+            -webkit-app-region: drag;
+            -webkit-user-select: none;
+            position: fixed;
+            z-index: 1;
+        }
+
+        nav #titleshown {
+            width: 30%;
+            height: 100%;
+            line-height: 30px;
+            color: #f7f7f7;
+            float: left;
+            padding: 0 0 0 1em;
+        }
+
+        nav #buttons {
+            float: right;
+            height: 100%;
+            line-height: 30px;
+            background-color:transparent;
+            -webkit-app-region: no-drag;
+        }
+
+        nav #buttons #minimize,
+        nav #buttons #maximize,
+        nav #buttons #quit {
+            float: left;
+            height: 30px;
+            width: 25px;
+            text-align: center;
+            color: #f7f7f7;
+            font-size: 25px;
+            cursor: default;
+            cursor: pointer;
+        }
+
+        nav #buttons #minimize:hover {
+            background-color:rgb(31, 113, 151);
+        }
+        nav #buttons #maximize:hover {
+             background-color:rgb(31, 113, 151);
+        }
+        nav #buttons #quit:hover {
+            background-color:rgb(255, 0, 242);
+        }
+
+    </style>
+    </script>
+</head>
+<body>
+
+    <nav style="-webkit-app-region: drag">
+      <div id="titleshown"></div>
+      <div id="buttons">
+          <div id="quit"><span>&times;</span></div>
+      </div>
+    </nav>
+
+    <script>
+        (function () {
+            document.querySelector('#quit').addEventListener('click', (e) => {
+                ipcRenderer.send("closePopup");
+            });
+
+            const ipcRenderer = require("electron").ipcRenderer;
+
+            var Popout;
+            Popout = class Popout {
+            constructor() {
+                this.getVideoIdAndCurrentTime(() => {
+                return this.setUpPlayer(() => {
+                    return this.loadVideo(() => {
+                    return this.loadAPI();
+                    });
+                });
+                });
+            }
+            loadVideo(callback) {
+                var iframe;
+                iframe = document.createElement("iframe");
+                iframe.id = "player";
+                iframe.title = "YouTube video player";
+                iframe.width = "100%";
+                iframe.height = "100%";
+                iframe.src = `https://www.youtube.com/embed/${this.videoId}?enablejsapi=1`;
+                iframe.setAttribute("frameborder", "0");
+                iframe.setAttribute("allowfullscreen", "");
+                document.body.appendChild(iframe);
+                return callback();
+            }
+            loadAPI() {
+                var firstScript, script;
+                script = document.createElement("script");
+                script.src = "https://www.youtube.com/iframe_api";
+                firstScript = document.getElementsByTagName("script")[0];
+                return firstScript.parentNode.insertBefore(script, firstScript);
+            }
+            setUpPlayer(callback) {
+                window.onYouTubeIframeAPIReady = () => {
+                this.player = new YT.Player("player", {
+                    height: this.height,
+                    width: this.width,
+                    videoId: this.videoId,
+                    playerVars: {
+                    enablejsapi: 1,
+                    },
+                    events: {
+                    onReady: () => {
+                        this.player.seekTo(this.currentTime - 1);
+                        return this.player.playVideo();
+                    },
+                    },
+                });
+                return (window.player = this.player);
+                };
+                return callback();
+            }
+            getVideoIdAndCurrentTime(callback) {
+                ipcRenderer.on('setVideoIdAndCurrentTime', (event, response) => {
+                    this.videoId = response.videoId;
+                    this.currentTime = response.currentTime;
+                    return callback();
+                });
+
+                console.log('sending cb')
+
+                ipcRenderer.send("getVideoIdAndCurrentTime");
+            }
+            };
+            new Popout();
+        }.call(this));
+    </script>
+</body>
+</html>

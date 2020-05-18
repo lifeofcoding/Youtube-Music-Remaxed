@@ -36,6 +36,18 @@ function createWindow() {
 
   mainWindow = new MainWindow();
 
+  const filter = {
+    urls: ["*://*./*"],
+  };
+  session.defaultSession.webRequest.onBeforeSendHeaders(
+    filter,
+    (details, callback) => {
+      details.requestHeaders["Referer"] = "https://music.youtube.com";
+      //details.requestHeaders["Origin"] = "https://music.youtube.com";
+      callback({ cancel: false, requestHeaders: details.requestHeaders });
+    }
+  );
+
   session.defaultSession.webRequest.onBeforeRequest(["*://*./*"], function (
     details,
     callback

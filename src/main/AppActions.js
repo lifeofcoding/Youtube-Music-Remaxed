@@ -3,18 +3,93 @@ const os = require("os");
 process.env.KEY = "AIzaSyC3_5fN3lbGKuTWCC0Dwhd0hJ_X6wh8kXw";
 
 const sh = require("shelljs");
+const path = require("path");
 const notifier = require("electron-notifications");
 const ffbinaries = require("ffbinaries");
 const dest = app.getPath("appData");
-
+const Store = require("./Store");
 const YoutubeMp3Downloader = require("youtube-mp3-downloader");
 
-var pathToStore, ffmpegPath, ffmpegFilename;
+const store = new Store({
+  // We'll call our data file 'user-preferences'
+  configName: "user-preferences",
+  defaults: {
+    // 800x600 is the default size of our window
+    downloads: [],
+    pathToStore: "",
+  },
+});
+
+var currentVideo = {};
+
+function createBrowserWindow(params) {
+  const { screen } = require("electron");
+
+  const displays = screen.getAllDisplays();
+  var x = 0,
+    y = 0;
+  for (var i in displays) {
+    console.log("displays[i].bounds.width", displays[i].bounds.width);
+    console.log("displays[i].bounds.height", displays[i].bounds.height);
+    x += displays[i].bounds.width;
+    y += displays[i].bounds.height;
+  }
+
+  const width = params.width / 2;
+  const height = params.height / 2;
+
+  console.log("w and h", width, height);
+  console.log("x and y", x, y);
+
+  const win = new BrowserWindow({
+    height: Math.round(height),
+    width: Math.round(width),
+    y: y,
+    x: x,
+    frame: false,
+    transparent: true,
+    movable: true,
+    resizeable: true,
+    alwaysOnTop: true,
+    opacity: 0.5,
+    titleBarStyle: "hidden",
+    webPreferences: {
+      nodeIntegration: true,
+    },
+  });
+
+  currentVideo = params;
+
+  win.loadURL(`file://${path.resolve(__dirname, "../../popout.html")}`);
+  win.setAlwaysOnTop(true);
+
+  ipcMain.on("closePopup", (e, args) => {
+    win.close();
+  });
+}
+
+var pathToStore = store.get("pathToStore"),
+  ffmpegPath,
+  ffmpegFilename;
 class AppActions {
   constructor(mainWindow) {
     this.mainWindow = mainWindow;
 
+    const downloads = store.get("downloads");
+
     const changeOutputFolder = this.changeOutputFolder.bind(this);
+
+    ipcMain.on("popout", (e, args) => {
+      console.log("creating popout: ", args);
+      createBrowserWindow(args);
+    });
+
+    ipcMain.on("getVideoIdAndCurrentTime", (event, args) => {
+      //console.log("setVideoIdAndCurrentTime", currentVideo);
+      console.log("event", event);
+      event.sender.send("setVideoIdAndCurrentTime", currentVideo);
+    });
+
     ffbinaries.downloadBinaries(
       ["ffmpeg"],
       { platform: os.platform(), quiet: true, destination: dest },
@@ -58,6 +133,10 @@ class AppActions {
                 file: pathToStore,
                 buttons: ["Dismiss", "Open"],
               });
+
+              downloads.push(data);
+
+              store.set("downloads", downloads);
 
               notification.on("buttonClicked", (text, buttonIndex, options) => {
                 if (buttonIndex === 1) {
@@ -132,6 +211,7 @@ class AppActions {
     // If a folder was selected and not just closed, set the localStorage value to that path and adjust the state.
     if (fileSelector) {
       pathToStore = fileSelector[0];
+      store.set("pathToStore", pathToStore);
       callback(pathToStore);
     }
   }
