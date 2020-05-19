@@ -15,7 +15,7 @@ function registerGlobalShortcuts(playbackActions, appActions) {
     playbackActions.previous();
   });
 
-  globalShortcut.register("Space", () => {
+  globalShortcut.register("CommandOrControl+P", () => {
     playbackActions.playPause();
   });
 

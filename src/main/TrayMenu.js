@@ -12,7 +12,7 @@ class TrayMenu extends Tray {
 
   createTrayMenu() {
     if (platform == "darwin") {
-      this.setPressedImage(imageFolder + "/osx/trayHighlight.png");
+      this.setPressedImage(imageFolder + "/osx/icon.png");
     }
     this.setToolTip("YouTube Music Desktop - Pwnd");
     this.setContextMenu(getTrayMenu(this.playbackActions, this.appActions));
@@ -24,9 +24,9 @@ function getTrayIcon() {
 }
 
 function getTrayIconPath() {
-  if (platform == "darwin") {
+  if (platform == "darwin" || platform == "linux") {
     // *nix: mac & linux
-    return imageFolder + "/osx/trayHighlight.png";
+    return imageFolder + "/osx/icon.png";
   } else {
     // windows
     return imageFolder + "/win/tray.ico";

@@ -15,7 +15,6 @@
     "copyright": "Copyright © 2019 LifeOfCoding",
     "mac": {
       "target": [
-        "dmg",
         "zip"
       ],
       "category": "music"
