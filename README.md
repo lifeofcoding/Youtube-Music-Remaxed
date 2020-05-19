@@ -1,6 +1,6 @@
 ## Youtube Music Remaxed!
 
-Desktop Youtube Music client, to the max! (Extra features!)
+An Ad-Free Desktop Youtube Music client, to the max! (Extra features!)
 
 Picture in Picture:
 ![screenshot](screenshot-pip.png)
