@@ -1,6 +1,6 @@
 const { Menu } = require("electron");
 
-function createMenu(playbackActions) {
+function createMenu(playbackActions, appActions) {
   const topLevelItems = [
     {
       label: "Application",
@@ -8,7 +8,9 @@ function createMenu(playbackActions) {
         {
           label: "Quit Youtube Music",
           accelerator: "CmdOrCtrl+Q",
-          role: "quit",
+          click() {
+            appActions.quitApp();
+          },
         },
       ],
     },

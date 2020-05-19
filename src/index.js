@@ -77,7 +77,7 @@ function createWindow() {
 }
 
 function createMenu() {
-  mainMenu.createMenu(getPlaybackActions());
+  mainMenu.createMenu(getPlaybackActions(), getAppActions());
 }
 
 function createTrayMenu() {
@@ -85,7 +85,7 @@ function createTrayMenu() {
   trayMenu.createTrayMenu();
 }
 function registerGlobalShortcuts() {
-  shortcuts.registerGlobalShortcuts(getPlaybackActions());
+  shortcuts.registerGlobalShortcuts(getPlaybackActions(), getAppActions());
 }
 
 function getPlaybackActions() {

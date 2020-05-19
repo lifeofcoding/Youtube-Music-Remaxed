@@ -67,7 +67,6 @@ function getTrayMenu(playbackActions, appActions) {
 
     {
       label: "Quit Youtube Music",
-      role: "quit",
       click: function () {
         appActions.quitApp();
       },

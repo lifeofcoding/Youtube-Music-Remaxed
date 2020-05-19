@@ -2,7 +2,7 @@ const playbackActions = require("./PlaybackActions");
 const appActions = require("./AppActions");
 const { globalShortcut } = require("electron");
 
-function registerGlobalShortcuts(playbackActions) {
+function registerGlobalShortcuts(playbackActions, appActions) {
   globalShortcut.register("MediaPlayPause", (obj) => {
     playbackActions.playPause();
   });
