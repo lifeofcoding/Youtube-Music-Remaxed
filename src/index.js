@@ -36,6 +36,20 @@ function createWindow() {
 
   mainWindow = new MainWindow();
 
+  mainWindow.on("minimize", function (event) {
+    event.preventDefault();
+    mainWindow.hide();
+  });
+
+  mainWindow.on("close", function (event) {
+    if (!app.isQuiting) {
+      event.preventDefault();
+      mainWindow.hide();
+    }
+
+    return false;
+  });
+
   const filter = {
     urls: ["*://*./*"],
   };

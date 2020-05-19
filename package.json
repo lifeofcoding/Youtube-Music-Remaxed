@@ -1,13 +1,13 @@
 {
-  "name": "Youtube-Music-Pwnd",
-  "version": "1.0.3",
+  "name": "youtube-music-pwnd",
+  "version": "0.2.0",
   "description": "Youtube Music with adblocking, and downloading.",
   "main": "src/index.js",
   "repository": "https://github.com/lifeofcoding/Youtube-Music-Remaxed.git",
   "scripts": {
     "start": "electron src/index.js",
     "pack": "electron-builder --dir",
-    "dist": "electron-builder -ml"
+    "dist": "electron-builder -mlw"
   },
   "build": {
     "appId": "engineer.hxc.music",
@@ -23,15 +23,16 @@
     "linux": {
       "category": "AudioVideo",
       "target": [
-        "AppImage"
+        "AppImage",
+        "Deb"
       ]
     },
     "win": {
-      "target": "NSIS"
+      "target": "nsis"
     }
   },
   "postinstall": "electron-builder install-app-deps",
-  "author": "LifeOfCoding",
+  "author": "LifeOfCoding <Jimmy@LivingTheCode.Life>",
   "license": "MIT",
   "devDependencies": {
     "electron": "^1.8.8",

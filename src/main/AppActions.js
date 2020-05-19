@@ -51,11 +51,13 @@ class AppActions {
           width -
           10,
         frame: false,
+        minWidth: 300,
+        minheight: 300,
         transparent: true,
         movable: true,
         resizeable: true,
         alwaysOnTop: true,
-        opacity: 0.5,
+        opacity: 0.85,
         titleBarStyle: "hidden",
         webPreferences: {
           preload: "preload.js",
@@ -220,6 +222,11 @@ class AppActions {
       store.set("pathToStore", pathToStore);
       callback(pathToStore);
     }
+  }
+
+  quitApp() {
+    app.isQuiting = true;
+    app.quit();
   }
 
   showWindow() {
