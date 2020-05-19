@@ -20,53 +20,8 @@ const store = new Store({
   },
 });
 
-var currentVideo = {};
-
-function createBrowserWindow(params) {
-  const { screen } = require("electron");
-
-  const displays = screen.getAllDisplays();
-  var x = 0,
-    y = 0;
-  for (var i in displays) {
-    console.log("displays[i].bounds.width", displays[i].bounds.width);
-    console.log("displays[i].bounds.height", displays[i].bounds.height);
-    x += displays[i].bounds.width;
-    y += displays[i].bounds.height;
-  }
-
-  const width = params.width / 2;
-  const height = params.height / 2;
-
-  console.log("w and h", width, height);
-  console.log("x and y", x, y);
-
-  const win = new BrowserWindow({
-    height: Math.round(height),
-    width: Math.round(width),
-    y: y,
-    x: x,
-    frame: false,
-    transparent: true,
-    movable: true,
-    resizeable: true,
-    alwaysOnTop: true,
-    opacity: 0.5,
-    titleBarStyle: "hidden",
-    webPreferences: {
-      nodeIntegration: true,
-    },
-  });
-
-  currentVideo = params;
-
-  win.loadURL(`file://${path.resolve(__dirname, "../../popout.html")}`);
-  win.setAlwaysOnTop(true);
-
-  ipcMain.on("closePopup", (e, args) => {
-    win.close();
-  });
-}
+var currentVideo = {},
+  popout;
 
 var pathToStore = store.get("pathToStore"),
   ffmpegPath,
@@ -74,6 +29,53 @@ var pathToStore = store.get("pathToStore"),
 class AppActions {
   constructor(mainWindow) {
     this.mainWindow = mainWindow;
+
+    const { screen } = require("electron");
+    function createBrowserWindow(params) {
+      let { x, y } = screen.getCursorScreenPoint();
+      let currentDisplay = screen.getDisplayNearestPoint({ x, y });
+      let width = Math.round(params.width / 2);
+      let height = Math.round(params.height / 2);
+
+      popout = new BrowserWindow({
+        height: height,
+        width: width,
+        y:
+          currentDisplay.workArea.y +
+          currentDisplay.workArea.height -
+          height -
+          10,
+        x:
+          currentDisplay.workArea.x +
+          currentDisplay.workArea.width -
+          width -
+          10,
+        frame: false,
+        transparent: true,
+        movable: true,
+        resizeable: true,
+        alwaysOnTop: true,
+        opacity: 0.5,
+        titleBarStyle: "hidden",
+        webPreferences: {
+          preload: "preload.js",
+          nodeIntegration: true,
+        },
+      });
+
+      popout.on("move", function (event) {
+        console.log(event.sender.getBounds());
+      });
+
+      currentVideo = params;
+
+      popout.loadURL(`file://${path.resolve(__dirname, "../../popout.html")}`);
+      popout.setAlwaysOnTop(true);
+
+      ipcMain.on("closePopup", (e, args) => {
+        popout.close();
+      });
+    }
 
     const downloads = store.get("downloads");
 
@@ -88,6 +90,10 @@ class AppActions {
       //console.log("setVideoIdAndCurrentTime", currentVideo);
       console.log("event", event);
       event.sender.send("setVideoIdAndCurrentTime", currentVideo);
+    });
+
+    ipcMain.on("getDownloadHistory", (e, args) => {
+      e.sender.send("downloadHistory", store.get("downloads"));
     });
 
     ffbinaries.downloadBinaries(

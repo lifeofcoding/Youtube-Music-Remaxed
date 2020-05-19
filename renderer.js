@@ -65,6 +65,19 @@ ipcRenderer.on("downloadProgress", function (event, data) {
   window.setDownloadProgress(data / 100);
 });
 
+ipcRenderer.on("downloadHistory", function (event, data) {
+  var div = document.querySelector("#download-history");
+  console.log("downloads:", data);
+  // data.map((item) => {
+  //   let li = document.createElement("li");
+  //   li.innerHTML = `
+  //     <li>${item.title}</li>
+  //   `;
+
+  //   div.append(li);
+  // });
+});
+
 function createFragment(htmlStr) {
   var frag = document.createDocumentFragment(),
     temp = document.createElement("div");
@@ -88,6 +101,10 @@ $webview.addEventListener("did-stop-loading", () => {
     });
 
     $(".openNav").fadeIn();
+
+    $webview.getWebContents().executeJavaScript(`
+      window.startPiP();
+    `);
   } else if ($(".openNav").is(":visible")) {
     $(".openNav").css({
       transition: "-webkit-transform 250ms ease-in",
@@ -100,6 +117,8 @@ $webview.addEventListener("did-stop-loading", () => {
 
 $webview.addEventListener("did-start-loading", () => {
   //$webview.getWebContents().openDevTools();
+
+  ipcRenderer.send("getDownloadHistory");
 
   $webview.getWebContents().on("will-navigate", function (event, url) {
     let video_id = YouTubeGetID(url);
@@ -168,7 +187,6 @@ $webview.addEventListener("dom-ready", () => {
   $(downloadBtn).on("click", () => {
     $(".openNav").trigger("click");
 
-    const ipcRenderer = require("electron").ipcRenderer;
     let video_id = YouTubeGetID(document.querySelector("webview").src);
     ipcRenderer.send("download", { id: video_id });
   });

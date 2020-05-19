@@ -197,7 +197,9 @@ function createFragment(htmlStr) {
       );
     }
   };
-  new YouTubeVideoPage();
+  window.startPiP = function () {
+    new YouTubeVideoPage();
+  };
 }.call(this));
 
 function init() {

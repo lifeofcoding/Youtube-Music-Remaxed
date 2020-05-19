@@ -1,6 +1,6 @@
 <html>
   <head>
-    <title>YouTube Music - reMAXed</title>
+    <title>YouTube Music - Pwnd</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link
       rel="stylesheet"
@@ -27,257 +27,7 @@
       src="https://rawgit.com/kimmobrunfeldt/progressbar.js/1.0.0/dist/progressbar.js"
     ></script>
 
-    <style>
-      @import url("https://fonts.googleapis.com/css?family=Roboto:300,400,500,700");
-      * {
-        outline-width: 0;
-        font-family: "Roboto";
-      }
-
-      body,
-      html {
-        background: #000;
-        padding: 0;
-        margin: 0;
-        width: 100vw;
-        height: 100vh;
-        overflow: hidden;
-      }
-
-      .disable-select {
-        user-select: none; /* supported by Chrome and Opera */
-        -webkit-user-select: none; /* Safari */
-        -khtml-user-select: none; /* Konqueror HTML */
-        -moz-user-select: none; /* Firefox */
-        -ms-user-select: none; /* Internet Explorer/Edge */
-      }
-
-      .openNav {
-        display: none;
-        transition: all 1s;
-        position: fixed;
-        z-index: 10;
-        right: 24vw;
-        bottom: 5px;
-        background: #909090;
-        border: none;
-        border-radius: 50%;
-        width: 42px;
-        color: #fff;
-        height: 42px;
-        cursor: pointer;
-        transition: 0.2s ease;
-        font-size: 22px;
-        padding: 0;
-        margin: 10px;
-        outline: none;
-      }
-      .openNav:hover {
-        background: #1c5380;
-      }
-
-      .openNav.downloading {
-        background: #1c5380;
-      }
-
-      .openNav img {
-        position: absolute;
-        top: 8px;
-        right: 8px;
-      }
-
-      nav {
-        position: fixed;
-        right: 0;
-        top: 0;
-        width: calc(100vw - 60px);
-        background: #fff;
-        height: 60px;
-        display: flex;
-        align-items: center;
-        padding-left: 15px;
-        box-sizing: border-box;
-        z-index: 10;
-      }
-      nav a {
-        display: block;
-        color: #444;
-        text-transform: uppercase;
-        padding: 15px;
-        box-sizing: border-box;
-        text-decoration: none;
-      }
-
-      .sideBar {
-        position: fixed;
-        z-index: 10;
-        bottom: 0;
-        left: -350px;
-        height: calc(100vh - 60px);
-        background: #222;
-        padding-top: 15px;
-        box-sizing: border-box;
-        width: 350px;
-        overflow: hidden;
-        transition: 0.4s cubic-bezier(0.77, 0, 0.18, 1);
-      }
-      .sideBar ul {
-        padding: 0;
-        margin: 0;
-      }
-      .sideBar ul li {
-        list-style: none;
-        opacity: 0;
-        visibility: hidden;
-        transition: 0.4s cubic-bezier(0.77, 0, 0.18, 1);
-        transition-delay: 0.3s;
-        box-sizing: border-box;
-      }
-      .sideBar ul li span {
-        font-weight: bold;
-        display: block;
-        white-space: nowrap;
-        padding: 15px;
-        box-sizing: border-box;
-        text-transform: uppercase;
-        color: #fff;
-      }
-      .sideBar ul li a {
-        display: block;
-        white-space: nowrap;
-        text-decoration: none;
-        color: #444;
-        text-transform: uppercase;
-        padding: 15px;
-        box-sizing: border-box;
-        color: #fff;
-      }
-      .sideBar ul li a:hover {
-        background: #111;
-      }
-      .sideBar.navToggle {
-        left: 0;
-      }
-      .sideBar.navToggle li {
-        opacity: 1;
-        visibility: visible;
-        transition-delay: 0.3s;
-      }
-
-      webview {
-        width: 100vw;
-        height: 100vh;
-        opacity: 1;
-        animation-duration: 500ms;
-      }
-      webview.hide {
-        flex: 0 1;
-        width: 0px;
-        height: 0px;
-        opacity: 0;
-      }
-      .loader {
-        display: flex;
-        height: 100%;
-        width: 100%;
-        background: #000000;
-        text-align: center;
-        justify-content: center;
-        align-items: center;
-        color: #fff;
-      }
-      .loader-hide {
-        display: none;
-      }
-      .rotate {
-        -moz-transform: rotate(360deg);
-        -webkit-transform: rotate(360deg);
-        -o-transform: rotate(360deg);
-        -ms-transform: rotate(360deg);
-        transform: rotate(360deg);
-      }
-
-      .lds-ripple {
-        display: inline-block;
-        position: relative;
-        width: 64px;
-        height: 64px;
-      }
-      .lds-ripple div {
-        position: absolute;
-        border: 4px solid #fff;
-        opacity: 1;
-        border-radius: 50%;
-        animation: lds-ripple 1s cubic-bezier(0, 0.2, 0.8, 1) infinite;
-      }
-      .lds-ripple div:nth-child(2) {
-        animation-delay: -0.5s;
-      }
-      @keyframes lds-ripple {
-        0% {
-          top: 28px;
-          left: 28px;
-          width: 0;
-          height: 0;
-          opacity: 1;
-        }
-        100% {
-          top: -1px;
-          left: -1px;
-          width: 58px;
-          height: 58px;
-          opacity: 0;
-        }
-      }
-
-      .modal {
-        position: fixed;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.5);
-        opacity: 0;
-        visibility: hidden;
-
-        display: flex;
-        align-items: center;
-        justify-items: center;
-        justify-content: space-around;
-      }
-      .modal-content {
-        background-color: rgba(0, 0, 0, 0.73);
-        padding: 1rem 1.5rem;
-        width: 24rem;
-        border-radius: 0.5rem;
-        color: #5effff;
-        display: none;
-        border: 1px solid cyan;
-      }
-      .close-button {
-        float: right;
-        width: 1.5rem;
-        line-height: 1.5rem;
-        text-align: center;
-        cursor: pointer;
-        border-radius: 0.25rem;
-        background-color: #636363;
-      }
-      .close-button:hover {
-        background-color: darkgray;
-      }
-      .show-modal {
-        opacity: 1;
-        visibility: visible;
-      }
-      .show-modal .modal-content {
-        display: block;
-      }
-
-      #main.modal-open {
-        filter: blur(5px);
-      }
-    </style>
+    <link rel="stylesheet" href="./app.css" />
   </head>
 
   <body>
@@ -312,17 +62,15 @@
         useragent="Mozilla/5.0 (Windows NT 10.0; WOW64; rv:58.0) Gecko/20100101 Firefox/58.0"
       >
       </webview>
-
-      <audio id="player" src="#">
-        Your browser does not support the
-        <code>audio</code> element.
-      </audio>
     </div>
 
     <div class="sideBar">
       <ul>
         <li><span>Download:</span></li>
         <li><a href="#" id="downloadBtn">Save MP3</a></li>
+      </ul>
+      <ul id="download-history">
+        <li><span>Download History:</span></li>
       </ul>
     </div>
 
