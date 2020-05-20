@@ -118,7 +118,7 @@ $webview.addEventListener("did-stop-loading", () => {
 $webview.addEventListener("did-start-loading", () => {
   //$webview.getWebContents().openDevTools();
 
-  ipcRenderer.send("getDownloadHistory");
+  //ipcRenderer.send("getDownloadHistory");
 
   $webview.getWebContents().on("will-navigate", function (event, url) {
     let video_id = YouTubeGetID(url);

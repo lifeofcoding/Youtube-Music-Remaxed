@@ -200,7 +200,8 @@ webview.hide {
   }
 }
 
-.modal {
+.modal,
+.offline {
   position: fixed;
   left: 0;
   top: 0;

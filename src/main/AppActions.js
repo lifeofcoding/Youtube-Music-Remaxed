@@ -20,207 +20,211 @@ const store = new Store({
   },
 });
 
-var currentVideo = {},
-  popout;
-
-var pathToStore = store.get("pathToStore"),
-  ffmpegPath,
-  ffmpegFilename;
 class AppActions {
   constructor(mainWindow) {
     this.mainWindow = mainWindow;
-
-    const { screen } = require("electron");
-    function createBrowserWindow(params) {
-      let { x, y } = screen.getCursorScreenPoint();
-      let currentDisplay = screen.getDisplayNearestPoint({ x, y });
-      let width = Math.round(params.width / 2);
-      let height = Math.round(params.height / 2);
-
-      popout = new BrowserWindow({
-        height: height,
-        width: width,
-        y:
-          currentDisplay.workArea.y +
-          currentDisplay.workArea.height -
-          height -
-          10,
-        x:
-          currentDisplay.workArea.x +
-          currentDisplay.workArea.width -
-          width -
-          10,
-        frame: false,
-        minWidth: 300,
-        minheight: 300,
-        transparent: true,
-        movable: true,
-        resizeable: true,
-        alwaysOnTop: true,
-        opacity: 0.85,
-        titleBarStyle: "hidden",
-        webPreferences: {
-          preload: "preload.js",
-          nodeIntegration: true,
-        },
-      });
-
-      popout.on("move", function (event) {
-        console.log(event.sender.getBounds());
-      });
-
-      currentVideo = params;
-
-      popout.loadURL(`file://${path.resolve(__dirname, "../../popout.html")}`);
-      popout.setAlwaysOnTop(true);
-
-      ipcMain.on("closePopup", (e, args) => {
-        popout.close();
-      });
-    }
-
-    const downloads = store.get("downloads");
-
-    const changeOutputFolder = this.changeOutputFolder.bind(this);
+    this.popout = null;
 
     ipcMain.on("popout", (e, args) => {
       console.log("creating popout: ", args);
-      createBrowserWindow(args);
+      this.createPopOut(args);
     });
 
     ipcMain.on("getVideoIdAndCurrentTime", (event, args) => {
       //console.log("setVideoIdAndCurrentTime", currentVideo);
       console.log("event", event);
-      event.sender.send("setVideoIdAndCurrentTime", currentVideo);
+      event.sender.send("setVideoIdAndCurrentTime", store.get("currentVideo"));
     });
 
     ipcMain.on("getDownloadHistory", (e, args) => {
       e.sender.send("downloadHistory", store.get("downloads"));
     });
 
-    ffbinaries.downloadBinaries(
-      ["ffmpeg"],
-      { platform: os.platform(), quiet: true, destination: dest },
-      function (error, results) {
-        if (error || !results.length) {
-          return console.warn("Connection Error");
+    const haveBinaries = this.haveBinaries.bind(this);
+    var binaries = store.get("binaries");
+
+    if (binaries) {
+      console.log("have binaries", binaries);
+      haveBinaries(binaries);
+    } else {
+      console.log("does not hhave binaries", binaries);
+      ffbinaries.downloadBinaries(
+        ["ffmpeg"],
+        { platform: os.platform(), quiet: true, destination: dest },
+        (error, results) => {
+          if (error || !results.length) {
+            return console.warn("Connection Error");
+          } else {
+            binaries = results[0].path + "/" + results[0].filename;
+
+            store.set("binaries", binaries);
+            haveBinaries(binaries);
+          }
         }
+      );
+    }
+  }
 
-        ffmpegPath = results[0].path;
-        ffmpegFilename = results[0].filename;
+  createPopOut(params) {
+    const { screen } = require("electron");
 
-        console.log("ffmpegPath", ffmpegPath);
+    let { x, y } = screen.getCursorScreenPoint();
+    let currentDisplay = screen.getDisplayNearestPoint({ x, y });
+    let width = Math.round(params.width / 2);
+    let height = Math.round(params.height / 2);
 
-        ipcMain.on("download", (e, args) => {
-          const { id } = args;
+    this.popout = new BrowserWindow({
+      height: height,
+      width: width,
+      y:
+        currentDisplay.workArea.y +
+        currentDisplay.workArea.height -
+        height -
+        10,
+      x: currentDisplay.workArea.x + currentDisplay.workArea.width - width - 10,
+      frame: false,
+      minWidth: 300,
+      minheight: 300,
+      transparent: true,
+      movable: true,
+      resizeable: true,
+      alwaysOnTop: true,
+      opacity: 0.85,
+      titleBarStyle: "hidden",
+      icon: path.join(__dirname, "assets/icons/osx/icon.png"),
+      webPreferences: {
+        preload: "preload.js",
+        nodeIntegration: true,
+      },
+    });
 
-          console.log("download", id);
+    store.set("currentVideo", params);
 
-          changeOutputFolder((pathToStore) => {
-            var showStarted = false;
-            //Configure YoutubeMp3Downloader with your settings
-            var YD = new YoutubeMp3Downloader({
-              ffmpegPath: ffmpegPath + "/" + ffmpegFilename, // Where is the FFmpeg binary located?
-              //outputPath: pathToStore, // Where should the downloaded and encoded files be stored?
-              youtubeVideoQuality: "highest", // What video quality should be used?
-              queueParallelism: 2, // How many parallel downloads/encodes should be started?
-              progressTimeout: 2000, // How long should be the interval of the progress reports
-            });
+    this.popout.loadURL(
+      `file://${path.resolve(__dirname, "../../popout.html")}`
+    );
 
-            //Download video and save as MP3 file
-            YD.download(id);
+    this.popout.setAlwaysOnTop(true);
 
-            YD.on("finished", function (err, data) {
-              var mov = sh.mv(data.file, pathToStore);
-              console.log("Moved to " + mov.toString());
+    ipcMain.on("closePopup", (e, args) => {
+      this.popout.close();
+    });
+  }
 
-              console.log(JSON.stringify(data));
-              const notification = notifier.notify("Download finished!", {
-                message: `${data.videoTitle} has started downloading...`,
-                icon: data.thumbnail,
-                file: pathToStore,
-                buttons: ["Dismiss", "Open"],
-              });
+  haveBinaries(binaries) {
+    //const downloads = store.get("downloads");
+    const changeOutputFolder = this.changeOutputFolder.bind(this);
 
-              downloads.push(data);
+    console.log("binaries", binaries);
 
-              store.set("downloads", downloads);
+    ipcMain.on("download", (e, args) => {
+      const { id } = args;
 
-              notification.on("buttonClicked", (text, buttonIndex, options) => {
-                if (buttonIndex === 1) {
-                  //open options.file
-                  shell.openItem(options.file);
-                }
-                notification.close();
-              });
+      console.log("download", id);
 
-              notification.on("clicked", () => {
-                notification.close();
-                shell.openItem(pathToStore);
-              });
-            });
+      changeOutputFolder((pathToStore) => {
+        var showStarted = false;
+        //Configure YoutubeMp3Downloader with your settings
+        var YD = new YoutubeMp3Downloader({
+          ffmpegPath: binaries, // Where is the FFmpeg binary located?
+          //outputPath: pathToStore, // Where should the downloaded and encoded files be stored?
+          youtubeVideoQuality: "highest", // What video quality should be used?
+          queueParallelism: 2, // How many parallel downloads/encodes should be started?
+          progressTimeout: 2000, // How long should be the interval of the progress reports
+        });
 
-            YD.on("error", function (error) {
-              console.log(error);
-              notifier.notify("Download Error", {
-                message: error,
-                icon:
-                  "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAD5SURBVEhL7dQ/igIxFMfx2LieQTuPsIcQcRsP4p/OVkSwEQ8kLLbu2oggeApBRAst1O8LjMT4kplhmxX8waeJ770McTLmnZdIGSMssMURa4xRxZ/SwgnXgDN6KCB35Km1oZoJcqWGC7RhIU1EU0QXv4gdS8gGwaOqYAWtMeFHq/nEU0pYQmtw+dFqdpiijns60Ip9frQa1xA2c2gFPj9aje8L9uJoP4o+0iI1Wq+YwRycBU1sk9hwsYf5cRZCtE3Shgu7QdtZiHE3yTJc2CP6QNodSMjgrMOF/ZMlctGy3IU8BniIfCrkTshrK2enNaWRvm808M6/iDE3q7H2mDvGfLUAAAAASUVORK5CYII=",
-                buttons: ["Dismiss"],
-              });
-            });
+        //Download video and save as MP3 file
+        YD.download(id);
 
-            var timeout;
-            YD.on("progress", function (data) {
-              console.log(JSON.stringify(data.progress));
+        YD.on("finished", function (err, data) {
+          var mov = sh.mv(data.file, pathToStore);
+          console.log("Moved to " + mov.toString());
 
-              if (timeout) {
-                clearTimeout(timeout);
-              }
+          console.log(JSON.stringify(data));
+          const notification = notifier.notify("Download finished!", {
+            message: `${data.videoTitle} has started downloading...`,
+            icon: data.thumbnail,
+            file: pathToStore,
+            buttons: ["Dismiss", "Open"],
+          });
 
-              let sendProgress = () => {
-                console.log(
-                  "data.progress.percentage",
-                  data.progress.percentage
-                );
-                mainWindow.webContents.send(
-                  "downloadProgress",
-                  Math.round(data.progress.percentage)
-                );
-                // let newVal = Math.floor((downloaded / total) * 100);
-              };
+          //downloads.push(data);
 
-              timeout = setTimeout(sendProgress, 500);
-            });
+          //store.set("downloads", downloads);
 
-            notifier.notify("Download Started", {
-              message: "MP3 has started downloading...",
-              icon:
-                "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAD5SURBVEhL7dQ/igIxFMfx2LieQTuPsIcQcRsP4p/OVkSwEQ8kLLbu2oggeApBRAst1O8LjMT4kplhmxX8waeJ770McTLmnZdIGSMssMURa4xRxZ/SwgnXgDN6KCB35Km1oZoJcqWGC7RhIU1EU0QXv4gdS8gGwaOqYAWtMeFHq/nEU0pYQmtw+dFqdpiijns60Ip9frQa1xA2c2gFPj9aje8L9uJoP4o+0iI1Wq+YwRycBU1sk9hwsYf5cRZCtE3Shgu7QdtZiHE3yTJc2CP6QNodSMjgrMOF/ZMlctGy3IU8BniIfCrkTshrK2enNaWRvm808M6/iDE3q7H2mDvGfLUAAAAASUVORK5CYII=",
-              buttons: ["Dismiss"],
-            });
+          notification.on("buttonClicked", (text, buttonIndex, options) => {
+            if (buttonIndex === 1) {
+              //open options.file
+              shell.openItem(options.file);
+            }
+            notification.close();
+          });
+
+          notification.on("clicked", () => {
+            notification.close();
+            shell.openItem(pathToStore);
           });
         });
-      }
-    );
+
+        YD.on("error", function (error) {
+          console.log(error);
+          notifier.notify("Download Error", {
+            message: error,
+            icon:
+              "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAD5SURBVEhL7dQ/igIxFMfx2LieQTuPsIcQcRsP4p/OVkSwEQ8kLLbu2oggeApBRAst1O8LjMT4kplhmxX8waeJ770McTLmnZdIGSMssMURa4xRxZ/SwgnXgDN6KCB35Km1oZoJcqWGC7RhIU1EU0QXv4gdS8gGwaOqYAWtMeFHq/nEU0pYQmtw+dFqdpiijns60Ip9frQa1xA2c2gFPj9aje8L9uJoP4o+0iI1Wq+YwRycBU1sk9hwsYf5cRZCtE3Shgu7QdtZiHE3yTJc2CP6QNodSMjgrMOF/ZMlctGy3IU8BniIfCrkTshrK2enNaWRvm808M6/iDE3q7H2mDvGfLUAAAAASUVORK5CYII=",
+            buttons: ["Dismiss"],
+          });
+        });
+
+        var timeout;
+        YD.on("progress", function (data) {
+          console.log(JSON.stringify(data.progress));
+
+          if (timeout) {
+            clearTimeout(timeout);
+          }
+
+          let sendProgress = () => {
+            console.log("data.progress.percentage", data.progress.percentage);
+            mainWindow.webContents.send(
+              "downloadProgress",
+              Math.round(data.progress.percentage)
+            );
+            // let newVal = Math.floor((downloaded / total) * 100);
+          };
+
+          timeout = setTimeout(sendProgress, 1000);
+        });
+
+        notifier.notify("Download Started", {
+          message: "MP3 has started downloading...",
+          icon:
+            "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAD5SURBVEhL7dQ/igIxFMfx2LieQTuPsIcQcRsP4p/OVkSwEQ8kLLbu2oggeApBRAst1O8LjMT4kplhmxX8waeJ770McTLmnZdIGSMssMURa4xRxZ/SwgnXgDN6KCB35Km1oZoJcqWGC7RhIU1EU0QXv4gdS8gGwaOqYAWtMeFHq/nEU0pYQmtw+dFqdpiijns60Ip9frQa1xA2c2gFPj9aje8L9uJoP4o+0iI1Wq+YwRycBU1sk9hwsYf5cRZCtE3Shgu7QdtZiHE3yTJc2CP6QNodSMjgrMOF/ZMlctGy3IU8BniIfCrkTshrK2enNaWRvm808M6/iDE3q7H2mDvGfLUAAAAASUVORK5CYII=",
+          buttons: ["Dismiss"],
+        });
+      });
+    });
   }
 
   changeOutputFolder(callback) {
-    if (pathToStore) {
-      return callback(pathToStore);
-    }
-    // Create an electron open dialog for selecting folders, this will take into account platform.
-    let fileSelector = dialog.showOpenDialog({
-      defaultPath: pathToStore || app.getPath("downloads"),
-      properties: ["openDirectory"],
-      title: "Select folder to store files.",
-    });
+    let pathToStore = store.get("pathToStore");
 
-    // If a folder was selected and not just closed, set the localStorage value to that path and adjust the state.
-    if (fileSelector) {
-      pathToStore = fileSelector[0];
-      store.set("pathToStore", pathToStore);
+    if (pathToStore) {
       callback(pathToStore);
+    } else {
+      // Create an electron open dialog for selecting folders, this will take into account platform.
+      let fileSelector = dialog.showOpenDialog({
+        defaultPath: pathToStore || app.getPath("downloads"),
+        properties: ["openDirectory"],
+        title: "Select folder to store files.",
+      });
+
+      // If a folder was selected and not just closed, set the localStorage value to that path and adjust the state.
+      if (fileSelector) {
+        pathToStore = fileSelector[0];
+        store.set("pathToStore", pathToStore);
+        callback(pathToStore);
+      }
     }
   }
 

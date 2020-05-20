@@ -203,6 +203,9 @@ function createFragment(htmlStr) {
 }.call(this));
 
 function init() {
+  var class_hashmap = { ad1: "ad1", ad2: "ad2" };
+  var id_hashmap = { adid1: "adid1", adid2: "adid2" };
+
   const clear = (() => {
     console.log("trying ad removal method 2");
     const defined = (v) => v !== null && v !== undefined;
@@ -290,9 +293,6 @@ function init() {
       }
     }
   });
-
-  // var class_hashmap = { ad1: "ad1", ad2: "ad2" };
-  // var id_hashmap = { adid1: "adid1", adid2: adid2 };
 }
 
 init();

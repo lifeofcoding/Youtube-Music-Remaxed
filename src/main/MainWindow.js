@@ -1,14 +1,12 @@
-
-const windowStateManager = require('electron-window-state');
-const { app, BrowserWindow } = require('electron');
-const path = require('path');
+const windowStateManager = require("electron-window-state");
+const { app, BrowserWindow } = require("electron");
+const path = require("path");
 
 let mainWindowState;
 
 class MainWindow extends BrowserWindow {
-
   constructor() {
-    mainWindowState = windowStateManager(getWindowDefaults())
+    mainWindowState = windowStateManager(getWindowDefaults());
 
     super({
       width: mainWindowState.width,
@@ -17,23 +15,22 @@ class MainWindow extends BrowserWindow {
       y: mainWindowState.y,
       minWidth: 800,
       minHeight: 600,
-      backgroundColor: '#181818',
-      icon: path.join(__dirname, 'assets/icons/osx/trayHighlight.png'),
+      backgroundColor: "#181818",
+      icon: path.join(__dirname, "assets/icons/osx/icon.png"),
       webPreferences: {
         nodeIntegration: true,
-        preload: "preload.js"
-      }
+        preload: "preload.js",
+      },
     });
 
-    mainWindowState.manage(this)
+    mainWindowState.manage(this);
 
-    this.loadURL(`file://${path.resolve(__dirname, '../../index.html')}`);
-
+    this.loadURL(`file://${path.resolve(__dirname, "../../index.html")}`);
   }
 }
 
 function getWindowDefaults() {
-  return { defaultWidth: 1024, defaultHeight: 768 }
+  return { defaultWidth: 1024, defaultHeight: 768 };
 }
 
-module.exports = MainWindow
+module.exports = MainWindow;

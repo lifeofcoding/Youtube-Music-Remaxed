@@ -44,6 +44,14 @@
         <p>Made with love by LifeOfCoding</p>
       </div>
     </div>
+
+    <div class="offline">
+      <div class="modal-content magictime puffIn">
+        <h1>Offline</h1>
+        <p>Oops, you seem to be having connection issues...</p>
+      </div>
+    </div>
+
     <div id="main">
       <div class="loader">
         <div class="lds-ripple">
@@ -125,11 +133,22 @@
 
       var body = document.querySelector("#main");
       var modal = document.querySelector(".modal");
+      var offLineModal = document.querySelector(".offline");
       var closeButton = document.querySelector(".close-button");
 
       window.toggleModal = function () {
         modal.classList.toggle("show-modal");
         body.classList.toggle("modal-open");
+      };
+
+      window.toggleOfflineModal = function () {
+        if (!navigator.onLine) {
+          offLineModal.classList.add("show-modal");
+          body.classList.add("modal-open");
+        } else {
+          offLineModal.classList.remove("show-modal");
+          body.classList.remove("modal-open");
+        }
       };
 
       function windowOnClick(event) {
@@ -140,6 +159,15 @@
 
       closeButton.addEventListener("click", toggleModal);
       window.addEventListener("click", windowOnClick);
+
+      const updateOnlineStatus = () => {
+        toggleOfflineModal();
+      };
+
+      window.addEventListener("online", updateOnlineStatus);
+      window.addEventListener("offline", updateOnlineStatus);
+
+      updateOnlineStatus();
 
       window.addEventListener("resize", function () {
         webview.style.width = window.innerWidth;
